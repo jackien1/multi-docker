@@ -19,4 +19,4 @@ after_success:
   - docker push jackieni/multi-client
   - docker push jackieni/multi-nginx
   - docker push jackieni/multi-server
-  - docker push jackieni/multi-client
+  - docker push jackieni/multi-worker
