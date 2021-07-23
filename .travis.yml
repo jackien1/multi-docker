@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t jackieni/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true jackieni/react-test npm run test
+
+after_success:
+  - docker build -t jackieni/multi-client ./client
+  - docker build -t jackieni/multi-nginx ./nginx
+  - docker build -t jackieni/multi-server ./server
+  - docker build -t jackieni/multi-worker ./worker
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push jackieni/multi-client
+  - docker push jackieni/multi-nginx
+  - docker push jackieni/multi-server
+  - docker push jackieni/multi-client
